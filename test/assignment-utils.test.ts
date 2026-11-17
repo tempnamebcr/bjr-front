@@ -94,13 +94,13 @@ describe('filterRowsByEmployee', () => {
 
 describe('summarize', () => {
   it('counts tasks and employees with work', () => {
-    expect(summarize(result)).toEqual({ totalPrice: 1550, makespan: 3.5, taskCount: 3, activeEmployeeCount: 2 })
+    expect(summarize(result)).toEqual({ totalPrice: 1550, makespan: 3.5, taskCount: 3, activeEmployeeCount: 2, employeeCount: 3 })
   })
 
   it('matches the sample data', () => {
     const sample = (mockResults as AssignmentResponse).variants.cost as FeasibleResult
 
-    expect(summarize(sample)).toEqual({ totalPrice: 17460, makespan: 51, taskCount: 30, activeEmployeeCount: 2 })
+    expect(summarize(sample)).toEqual({ totalPrice: 17460, makespan: 51, taskCount: 30, activeEmployeeCount: 2, employeeCount: 10 })
   })
 })
 

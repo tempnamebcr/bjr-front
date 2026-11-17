@@ -25,6 +25,7 @@ export interface Summary {
   taskCount: number
   /** Employees with at least one task. */
   activeEmployeeCount: number
+  employeeCount: number
 }
 
 export interface WorkloadBar {
@@ -114,6 +115,7 @@ export function summarize(result: FeasibleResult): Summary {
     makespan: result.makespan,
     taskCount: result.assignments.length,
     activeEmployeeCount: assignedEmployeeIds(result).length,
+    employeeCount: result.employees.length,
   }
 }
 
