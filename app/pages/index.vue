@@ -13,7 +13,7 @@ watch(variant, () => {
   employeeFilter.value = null
 })
 
-const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload } = useVariantView(data, variant, employeeFilter)
+const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload, comparison } = useVariantView(data, variant, employeeFilter)
 
 const errorMessage = computed(() => describeError(error.value))
 const errorRetryable = computed(() => isRetryable(error.value))
@@ -44,6 +44,12 @@ const errorRetryable = computed(() => isRetryable(error.value))
       />
 
       <template v-else-if="feasible && summary">
+        <!-- Independent of the selected tab: both variants side by side. -->
+        <VariantComparison
+          v-if="comparison"
+          :comparison="comparison"
+        />
+
         <SummaryCards
           :summary="summary"
           :lower-bound="feasible.meta.lowerBound"
