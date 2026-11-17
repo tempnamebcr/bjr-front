@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { AssignmentInput, AssignmentResponse, FeasibleResult, InfeasibleResult } from '#shared/types/assignment'
 import {
   assignedEmployeeIds,
+  axisTicks,
   buildTimeline,
   buildWorkload,
   compareVariants,
@@ -142,14 +143,45 @@ describe('buildWorkload', () => {
 
 describe('buildTimeline', () => {
   it('places each task as a block on its employee lane, idle lanes empty', () => {
-    const lanes = buildTimeline(result)
+    const lanes = buildTimeline(result, input)
 
     expect(lanes.map(lane => lane.employeeId)).toEqual([1, 2, 3])
     expect(lanes[0]!.blocks).toEqual([
-      { taskId: 1, start: 0, end: 2, leftPercent: 0, widthPercent: (2 / 3.5) * 100 },
-      { taskId: 3, start: 2, end: 3.5, leftPercent: (2 / 3.5) * 100, widthPercent: (1.5 / 3.5) * 100 },
+      { taskId: 1, requiredSkill: 1, start: 0, end: 2, leftPercent: 0, widthPercent: (2 / 3.5) * 100 },
+      { taskId: 3, requiredSkill: 1, start: 2, end: 3.5, leftPercent: (2 / 3.5) * 100, widthPercent: (1.5 / 3.5) * 100 },
     ])
+    expect(lanes[1]!.blocks[0]!.requiredSkill).toBe(2)
     expect(lanes[2]!.blocks).toEqual([])
+  })
+
+  it('blocks of one lane never overlap and end at the employee load (sample data)', () => {
+    const response = mockResults as AssignmentResponse
+    const sample = response.variants.makespan as FeasibleResult
+
+    for (const lane of buildTimeline(sample, response.input)) {
+      lane.blocks.forEach((block, i) => {
+        expect(block.start).toBe(i === 0 ? 0 : lane.blocks[i - 1]!.end)
+      })
+      const load = sample.employees.find(e => e.employeeId === lane.employeeId)!.totalAssignedHours
+      expect(lane.blocks.at(-1)?.end ?? 0).toBe(load)
+    }
+  })
+})
+
+describe('axisTicks', () => {
+  it('picks a round step with at most 12 intervals', () => {
+    expect(axisTicks(11).map(t => t.hour)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+    expect(axisTicks(51).map(t => t.hour)).toEqual([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+    expect(axisTicks(3.5).map(t => t.hour)).toEqual([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5])
+  })
+
+  it('positions ticks as a share of the makespan', () => {
+    expect(axisTicks(10).at(-1)).toEqual({ hour: 10, percent: 100 })
+    expect(axisTicks(51)[1]!.percent).toBeCloseTo((5 / 51) * 100)
+  })
+
+  it('handles an empty schedule', () => {
+    expect(axisTicks(0)).toEqual([{ hour: 0, percent: 0 }])
   })
 })
 

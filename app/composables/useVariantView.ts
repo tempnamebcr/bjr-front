@@ -3,6 +3,7 @@ import type { Ref } from 'vue'
 import type { AssignmentResponse, FeasibleResult, InfeasibleResult, Variant } from '#shared/types/assignment'
 import {
   assignedEmployeeIds,
+  axisTicks,
   buildTimeline,
   buildWorkload,
   compareVariants,
@@ -42,10 +43,13 @@ export function useVariantView(
 
   const workload = computed(() => (feasible.value ? buildWorkload(feasible.value) : []))
 
-  const timeline = computed(() => (feasible.value ? buildTimeline(feasible.value) : []))
+  const timeline = computed(() =>
+    feasible.value && response.value ? buildTimeline(feasible.value, response.value.input) : [])
+
+  const ticks = computed(() => (feasible.value ? axisTicks(feasible.value.makespan) : []))
 
   const comparison = computed(() =>
     compareVariants(response.value?.variants.cost, response.value?.variants.makespan))
 
-  return { result, feasible, infeasible, rows, filteredRows, filteredTotals, employeeOptions, summary, workload, timeline, comparison }
+  return { result, feasible, infeasible, rows, filteredRows, filteredTotals, employeeOptions, summary, workload, timeline, ticks, comparison }
 }

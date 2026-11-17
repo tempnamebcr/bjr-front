@@ -13,7 +13,7 @@ watch(variant, () => {
   employeeFilter.value = null
 })
 
-const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload, comparison } = useVariantView(data, variant, employeeFilter)
+const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload, timeline, ticks, comparison } = useVariantView(data, variant, employeeFilter)
 
 const errorMessage = computed(() => describeError(error.value))
 const errorRetryable = computed(() => isRetryable(error.value))
@@ -69,6 +69,22 @@ const errorRetryable = computed(() => isRetryable(error.value))
           <WorkloadChart
             :bars="workload"
             :makespan="feasible.makespan"
+          />
+        </section>
+
+        <section
+          aria-labelledby="timeline-heading"
+          class="space-y-3"
+        >
+          <h2
+            id="timeline-heading"
+            class="text-lg font-semibold"
+          >
+            Timeline
+          </h2>
+          <GanttTimeline
+            :lanes="timeline"
+            :ticks="ticks"
           />
         </section>
 

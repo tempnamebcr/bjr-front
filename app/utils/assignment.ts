@@ -40,6 +40,7 @@ export interface WorkloadBar {
 
 export interface TimelineBlock {
   taskId: number
+  requiredSkill: number
   start: number
   end: number
   /** Position and width as a share of the makespan, 0–100. */
@@ -138,12 +139,14 @@ export function buildWorkload(result: FeasibleResult): WorkloadBar[] {
 }
 
 /** One lane per employee (idle ones empty), each task a block positioned on a 0…makespan scale. */
-export function buildTimeline(result: FeasibleResult): TimelineLane[] {
+export function buildTimeline(result: FeasibleResult, input: AssignmentInput): TimelineLane[] {
+  const skillByTask = new Map(input.tasks.map(task => [task.taskId, task.skillLevel]))
   const lanes = new Map<number, TimelineBlock[]>(result.employees.map(load => [load.employeeId, []]))
 
   for (const { taskId, employeeId, start, end } of result.assignments) {
     lanes.get(employeeId)?.push({
       taskId,
+      requiredSkill: skillByTask.get(taskId) ?? 0,
       start,
       end,
       leftPercent: toPercent(start, result.makespan),
@@ -155,6 +158,29 @@ export function buildTimeline(result: FeasibleResult): TimelineLane[] {
     employeeId,
     blocks: blocks.sort((a, b) => a.start - b.start),
   }))
+}
+
+export interface AxisTick {
+  hour: number
+  percent: number
+}
+
+const TICK_STEPS = [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+
+/** Hour marks under the timeline: a "round" step (1, 2, 5, 10, …) giving at most `maxTicks` intervals. */
+export function axisTicks(makespan: number, maxTicks = 12): AxisTick[] {
+  if (makespan <= 0) {
+    return [{ hour: 0, percent: 0 }]
+  }
+
+  const step = TICK_STEPS.find(s => makespan / s <= maxTicks) ?? Math.ceil(makespan / maxTicks)
+  const ticks: AxisTick[] = []
+
+  for (let hour = 0; hour <= makespan + EPSILON; hour += step) {
+    ticks.push({ hour, percent: toPercent(hour, makespan) })
+  }
+
+  return ticks
 }
 
 /** Side-by-side numbers; null unless both variants are present and feasible. */
