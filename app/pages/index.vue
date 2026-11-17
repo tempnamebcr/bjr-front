@@ -5,15 +5,20 @@ useHead({ title: 'Task assignment dashboard' })
 
 const { data, status, error, refresh } = await useAssignments()
 
+const datasetRun = useDatasetRun()
+
+// Results of an edited/uploaded dataset replace the sample until "Reset to sample data".
+const shown = computed(() => datasetRun.result.value ?? data.value)
+
 const variant = useSelectedVariant()
 const employeeFilter = ref<number | null>(null)
 
-// Employee ids with work differ per variant, so a filter from the other tab would be stale.
-watch(variant, () => {
+// Employees with work differ per variant and per dataset, so an old filter would be stale.
+watch([variant, shown], () => {
   employeeFilter.value = null
 })
 
-const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload, timeline, ticks, comparison } = useVariantView(data, variant, employeeFilter)
+const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload, timeline, ticks, comparison } = useVariantView(shown, variant, employeeFilter)
 
 const errorMessage = computed(() => describeError(error.value))
 const errorRetryable = computed(() => isRetryable(error.value))
@@ -43,7 +48,17 @@ const errorRetryable = computed(() => isRetryable(error.value))
         @retry="refresh()"
       />
 
-      <template v-else-if="feasible && summary">
+      <DatasetEditor
+        v-if="data && !error"
+        :sample="data.input"
+        :is-custom="datasetRun.result.value !== null"
+        :pending="datasetRun.pending.value"
+        :errors="datasetRun.errors.value"
+        @run="datasetRun.run"
+        @reset="datasetRun.reset"
+      />
+
+      <template v-if="status !== 'pending' && !error && feasible && summary">
         <!-- Independent of the selected tab: both variants side by side. -->
         <VariantComparison
           v-if="comparison"
@@ -113,7 +128,7 @@ const errorRetryable = computed(() => isRetryable(error.value))
 
       <!-- Replaces the cards, workload and table: there is nothing to show for an unsolvable instance. -->
       <InfeasibleNotice
-        v-else-if="infeasible"
+        v-else-if="status !== 'pending' && !error && infeasible"
         :task-ids="infeasible.unassignableTaskIds"
       />
     </div>
