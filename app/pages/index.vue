@@ -13,7 +13,7 @@ watch(variant, () => {
   employeeFilter.value = null
 })
 
-const { feasible, summary } = useVariantView(data, variant, employeeFilter)
+const { feasible, summary, filteredRows, filteredTotals, employeeOptions } = useVariantView(data, variant, employeeFilter)
 
 const errorMessage = computed(() => describeError(error.value))
 const errorRetryable = computed(() => isRetryable(error.value))
@@ -49,6 +49,28 @@ const errorRetryable = computed(() => isRetryable(error.value))
           :lower-bound="feasible.meta.lowerBound"
           :proven-optimal="feasible.meta.provenOptimal"
         />
+
+        <section
+          aria-labelledby="assignments-heading"
+          class="space-y-3"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2
+              id="assignments-heading"
+              class="text-lg font-semibold"
+            >
+              Assignments
+            </h2>
+            <EmployeeFilter
+              v-model="employeeFilter"
+              :options="employeeOptions"
+            />
+          </div>
+          <AssignmentsTable
+            :rows="filteredRows"
+            :totals="filteredTotals"
+          />
+        </section>
       </template>
     </div>
   </div>

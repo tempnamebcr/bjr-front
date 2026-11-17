@@ -8,6 +8,7 @@ import {
   compareVariants,
   filterRowsByEmployee,
   joinAssignments,
+  sumRows,
   summarize,
 } from '~/utils/assignment'
 
@@ -33,6 +34,8 @@ export function useVariantView(
 
   const filteredRows = computed(() => filterRowsByEmployee(rows.value, employeeFilter.value))
 
+  const filteredTotals = computed(() => sumRows(filteredRows.value))
+
   const employeeOptions = computed(() => (feasible.value ? assignedEmployeeIds(feasible.value) : []))
 
   const summary = computed(() => (feasible.value ? summarize(feasible.value) : null))
@@ -44,5 +47,5 @@ export function useVariantView(
   const comparison = computed(() =>
     compareVariants(response.value?.variants.cost, response.value?.variants.makespan))
 
-  return { result, feasible, infeasible, rows, filteredRows, employeeOptions, summary, workload, timeline, comparison }
+  return { result, feasible, infeasible, rows, filteredRows, filteredTotals, employeeOptions, summary, workload, timeline, comparison }
 }

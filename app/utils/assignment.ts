@@ -101,6 +101,14 @@ export function filterRowsByEmployee(rows: AssignmentRow[], employeeId: number |
   return employeeId === null ? rows : rows.filter(row => row.employeeId === employeeId)
 }
 
+/** Footer of the assignments table: totals of the rows currently shown. */
+export function sumRows(rows: AssignmentRow[]): { hours: number, cost: number } {
+  return rows.reduce(
+    (total, row) => ({ hours: total.hours + row.hours, cost: total.cost + row.taskCost }),
+    { hours: 0, cost: 0 },
+  )
+}
+
 /** Employees that have work in this result, ascending: the options of the employee filter. */
 export function assignedEmployeeIds(result: FeasibleResult): number[] {
   return result.employees

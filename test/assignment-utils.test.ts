@@ -7,6 +7,7 @@ import {
   compareVariants,
   filterRowsByEmployee,
   joinAssignments,
+  sumRows,
   summarize,
 } from '~/utils/assignment'
 import mockResults from '../server/mock/mock-results.json'
@@ -89,6 +90,16 @@ describe('filterRowsByEmployee', () => {
 
   it('returns everything for null', () => {
     expect(filterRowsByEmployee(rows, null)).toHaveLength(3)
+  })
+})
+
+describe('sumRows', () => {
+  it('totals hours and cost of the given rows', () => {
+    const rows = joinAssignments(result, input)
+
+    expect(sumRows(rows)).toEqual({ hours: 6.5, cost: 1550 })
+    expect(sumRows(filterRowsByEmployee(rows, 1))).toEqual({ hours: 3.5, cost: 350 })
+    expect(sumRows([])).toEqual({ hours: 0, cost: 0 })
   })
 })
 

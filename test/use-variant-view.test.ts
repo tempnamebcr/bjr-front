@@ -26,6 +26,7 @@ describe('useVariantView', () => {
 
     expect(view.filteredRows.value.every(row => row.employeeId === 8)).toBe(true)
     expect(view.filteredRows.value).toHaveLength(10)
+    expect(view.filteredTotals.value).toEqual({ hours: 27, cost: 2160 }) // 27 h × 80
     expect(view.employeeOptions.value).toEqual([4, 8])
 
     filter.value = null
