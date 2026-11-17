@@ -1,4 +1,5 @@
-FROM node:20-alpine
+# Nuxt 4.6 requires Node ^22.21 || ^24.11
+FROM node:24-alpine
 
 WORKDIR /app
 
