@@ -1,15 +1,26 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  server: {
-    host: '0.0.0.0',
-    port: 3000
+  css: ['~/assets/css/main.css'],
+  vite: {
+    plugins: [tailwindcss()],
   },
+  // Listen on all interfaces so the dev server is reachable from outside the container.
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
+  // Server-only on purpose: nothing under `public`, so the browser never learns the
+  // backend URL and can only talk to Nuxt's own /api routes.
+  // Overridden at runtime by NUXT_BACKEND_URL and NUXT_USE_MOCK.
   runtimeConfig: {
-    apiBase: process.env.API_BASE || 'http://api:8000',
-    public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000'
-    }
-  }
+    backendUrl: 'http://localhost:8000',
+    useMock: false,
+  },
+  typescript: {
+    strict: true,
+  },
 })
