@@ -13,7 +13,7 @@ watch(variant, () => {
   employeeFilter.value = null
 })
 
-const { feasible, summary, filteredRows, filteredTotals, employeeOptions } = useVariantView(data, variant, employeeFilter)
+const { feasible, infeasible, summary, filteredRows, filteredTotals, employeeOptions, workload } = useVariantView(data, variant, employeeFilter)
 
 const errorMessage = computed(() => describeError(error.value))
 const errorRetryable = computed(() => isRetryable(error.value))
@@ -51,6 +51,22 @@ const errorRetryable = computed(() => isRetryable(error.value))
         />
 
         <section
+          aria-labelledby="workload-heading"
+          class="space-y-3"
+        >
+          <h2
+            id="workload-heading"
+            class="text-lg font-semibold"
+          >
+            Employee workload
+          </h2>
+          <WorkloadChart
+            :bars="workload"
+            :makespan="feasible.makespan"
+          />
+        </section>
+
+        <section
           aria-labelledby="assignments-heading"
           class="space-y-3"
         >
@@ -72,6 +88,12 @@ const errorRetryable = computed(() => isRetryable(error.value))
           />
         </section>
       </template>
+
+      <!-- Replaces the cards, workload and table: there is nothing to show for an unsolvable instance. -->
+      <InfeasibleNotice
+        v-else-if="infeasible"
+        :task-ids="infeasible.unassignableTaskIds"
+      />
     </div>
   </div>
 </template>
