@@ -8,9 +8,12 @@ Requires Node `^22.21` or `^24.11` (Nuxt 4.6).
 
 ### With Docker
 
-The `docker-compose.yml` lives one level up and starts the backend, Redis and this app together:
+The `docker-compose.yml` lives in the backend repo (`bjr-api`) and starts the backend, Redis and this app together. Clone both repos side by side:
 
 ```bash
+git clone https://github.com/tempnamebcr/bjr-api.git
+git clone https://github.com/tempnamebcr/bjr-front.git
+cd bjr-api
 docker compose up --build        # → http://localhost:3000
 ```
 
@@ -53,7 +56,7 @@ On Windows PowerShell, set variables first: `$env:NUXT_USE_MOCK='true'; npm run 
 | *Nice to have:* Gantt timeline | `GanttTimeline` (blocks coloured by required skill) |
 | *Nice to have:* edit/upload JSON and re-run | `DatasetEditor` → `POST /api/assignments` |
 | *Nice to have:* Vitest | `test/` (join, task cost, workload, timeline, comparison, guards, …) |
-| *Nice to have:* docker-compose | `../docker-compose.yml` |
+| *Nice to have:* docker-compose | `../bjr-api/docker-compose.yml` |
 
 ## Architecture
 
