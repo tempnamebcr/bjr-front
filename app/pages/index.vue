@@ -68,7 +68,7 @@ const errorRetryable = computed(() => isRetryable(error.value))
         <SummaryCards
           :summary="summary"
           :lower-bound="feasible.meta.lowerBound"
-          :proven-optimal="feasible.meta.provenOptimal"
+          :makespan-proven-optimal="feasible.meta.makespanProvenOptimal"
         />
 
         <section

@@ -25,7 +25,7 @@ export function isVariantResult(v: unknown): v is VariantResult {
     return isNumber(v.totalPrice)
       && isNumber(v.makespan)
       && isNumber(v.meta.lowerBound)
-      && typeof v.meta.provenOptimal === 'boolean'
+      && typeof v.meta.makespanProvenOptimal === 'boolean'
       && isListOf(v.assignments, ['taskId', 'employeeId', 'start', 'end'])
       && isListOf(v.employees, ['employeeId', 'totalAssignedHours'])
   }

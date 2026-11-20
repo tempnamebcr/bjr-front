@@ -10,7 +10,7 @@ const infeasible = {
   makespan: null,
   employees: [],
   unassignableTaskIds: [2, 5],
-  meta: { lowerBound: null, provenOptimal: false },
+  meta: { lowerBound: null, makespanProvenOptimal: false },
 }
 
 describe('isAssignmentResponse', () => {

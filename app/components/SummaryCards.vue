@@ -5,7 +5,7 @@ import { formatHours, formatNumber, formatPrice } from '~/utils/format'
 const props = defineProps<{
   summary: Summary
   lowerBound: number
-  provenOptimal: boolean
+  makespanProvenOptimal: boolean
 }>()
 
 const cards = computed(() => [
@@ -17,7 +17,7 @@ const cards = computed(() => [
   {
     label: 'Makespan',
     value: formatHours(props.summary.makespan),
-    note: props.provenOptimal
+    note: props.makespanProvenOptimal
       ? `Proven optimal (lower bound ${formatHours(props.lowerBound)})`
       : `Lower bound ${formatHours(props.lowerBound)}`,
   },

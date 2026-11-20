@@ -44,7 +44,8 @@ export interface FeasibleResult {
   /** Every employee, idle ones with 0 hours. */
   employees: EmployeeLoad[]
   unassignableTaskIds: []
-  meta: { lowerBound: number, provenOptimal: boolean }
+  /** makespanProvenOptimal: makespan == lowerBound, so no schedule finishes earlier. Says nothing about cost. */
+  meta: { lowerBound: number, makespanProvenOptimal: boolean }
 }
 
 export interface InfeasibleResult {
@@ -55,7 +56,7 @@ export interface InfeasibleResult {
   makespan: null
   employees: []
   unassignableTaskIds: number[]
-  meta: { lowerBound: null, provenOptimal: false }
+  meta: { lowerBound: null, makespanProvenOptimal: false }
 }
 
 /** Discriminated on `status`: checking it narrows the type in code and templates. */

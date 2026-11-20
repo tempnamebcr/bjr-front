@@ -46,7 +46,7 @@ describe('useVariantView', () => {
           makespan: null,
           employees: [],
           unassignableTaskIds: [4, 7],
-          meta: { lowerBound: null, provenOptimal: false },
+          meta: { lowerBound: null, makespanProvenOptimal: false },
         },
       },
     })

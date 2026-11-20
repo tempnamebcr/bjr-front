@@ -438,7 +438,7 @@
             "unassignableTaskIds": [],
             "meta": {
                 "lowerBound": 11.0,
-                "provenOptimal": false
+                "makespanProvenOptimal": false
             }
         },
         "makespan": {
@@ -673,7 +673,7 @@
             "unassignableTaskIds": [],
             "meta": {
                 "lowerBound": 11.0,
-                "provenOptimal": true
+                "makespanProvenOptimal": true
             }
         }
     }

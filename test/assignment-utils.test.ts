@@ -43,7 +43,7 @@ const result: FeasibleResult = {
     { employeeId: 3, totalAssignedHours: 0 },
   ],
   unassignableTaskIds: [],
-  meta: { lowerBound: 3, provenOptimal: false },
+  meta: { lowerBound: 3, makespanProvenOptimal: false },
 }
 
 const infeasible: InfeasibleResult = {
@@ -54,7 +54,7 @@ const infeasible: InfeasibleResult = {
   makespan: null,
   employees: [],
   unassignableTaskIds: [2],
-  meta: { lowerBound: null, provenOptimal: false },
+  meta: { lowerBound: null, makespanProvenOptimal: false },
 }
 
 describe('joinAssignments', () => {
